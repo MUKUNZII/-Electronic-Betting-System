@@ -268,41 +268,102 @@ export default function DepositPage() {
               <div className="card">
                 <h3 style={{ fontWeight:700, marginBottom:'1.25rem' }}>Step 2: Send Money Now</h3>
 
-                {/* Big payment instruction */}
-                <div style={{ background:'linear-gradient(135deg,rgba(245,158,11,0.15),rgba(245,158,11,0.05))', border:'2px solid rgba(245,158,11,0.4)', borderRadius:'14px', padding:'1.5rem', marginBottom:'1.25rem', textAlign:'center' }}>
-                  <div style={{ fontSize:'0.8rem', color:'var(--text-muted)', marginBottom:'0.5rem' }}>
-                    Send <strong style={{ color:'var(--primary)' }}>{symbol} {fmt(parseFloat(form.local_amount))}</strong> to this number:
+                {/* Amount summary */}
+                <div style={{ background:'linear-gradient(135deg,rgba(245,158,11,0.15),rgba(245,158,11,0.05))', border:'2px solid rgba(245,158,11,0.4)', borderRadius:'14px', padding:'1.25rem', marginBottom:'1.25rem', textAlign:'center' }}>
+                  <div style={{ fontSize:'0.8rem', color:'var(--text-muted)', marginBottom:'0.375rem' }}>You are sending</div>
+                  <div style={{ fontSize:'2rem', fontWeight:900, color:'var(--primary)', lineHeight:1, marginBottom:'0.25rem' }}>
+                    {symbol} {fmt(parseFloat(form.local_amount))}
                   </div>
-                  <div style={{ fontSize:'2rem', fontWeight:900, color:'var(--primary)', letterSpacing:'0.05em', marginBottom:'0.75rem', fontFamily:'monospace' }}>
-                    {RECEIVING_NUMBER}
+                  {currency !== 'RWF' && <div style={{ fontSize:'0.78rem', color:'var(--text-muted)' }}>= RF {fmt(rwfAmount)}</div>}
+                  <div style={{ fontSize:'0.8rem', color:'var(--text-muted)', marginTop:'0.5rem' }}>to <strong style={{ color:'var(--primary)', fontFamily:'monospace' }}>{RECEIVING_NUMBER}</strong></div>
+                </div>
+
+                {/* ── USSD Quick Dial buttons ── */}
+                <div style={{ marginBottom:'1.25rem' }}>
+                  <div style={{ fontWeight:700, fontSize:'0.875rem', marginBottom:'0.875rem', display:'flex', alignItems:'center', gap:'0.5rem' }}>
+                    <span style={{ background:'#22c55e', borderRadius:'50%', width:22, height:22, display:'inline-flex', alignItems:'center', justifyContent:'center', fontSize:'0.7rem', color:'#fff', fontWeight:800, flexShrink:0 }}>⚡</span>
+                    Tap to dial automatically — your phone will open the payment screen
                   </div>
-                  <button onClick={copyNumber} style={{ background:'var(--bg-dark)', border:'1px solid var(--border)', borderRadius:'8px', padding:'0.5rem 1.25rem', color: copied ? 'var(--success)' : 'var(--text-secondary)', cursor:'pointer', fontSize:'0.85rem', display:'inline-flex', alignItems:'center', gap:'0.5rem', fontWeight:600 }}>
-                    <FiCopy size={14}/> {copied ? 'Copied!' : 'Copy Number'}
-                  </button>
-                  <div style={{ marginTop:'0.875rem', fontSize:'0.8rem', color:'var(--text-muted)' }}>
-                    via {provider} · MTN MoMo Rwanda
+
+                  {/* Option 1 — MTN MoMo Pay (merchant code) */}
+                  <a
+                    href={`tel:*182*8*1*496836%23`}
+                    style={{ display:'block', textDecoration:'none', marginBottom:'0.75rem' }}
+                    onClick={() => toast.success('Opening MTN MoMo Pay on your phone…')}
+                  >
+                    <div style={{ background:'rgba(255,204,0,0.08)', border:'2px solid rgba(255,204,0,0.4)', borderRadius:'12px', padding:'1rem 1.25rem', display:'flex', alignItems:'center', gap:'1rem', cursor:'pointer', transition:'all 0.2s' }}
+                      onMouseEnter={e => { e.currentTarget.style.background='rgba(255,204,0,0.15)'; e.currentTarget.style.transform='translateY(-1px)'; }}
+                      onMouseLeave={e => { e.currentTarget.style.background='rgba(255,204,0,0.08)'; e.currentTarget.style.transform='none'; }}
+                    >
+                      <div style={{ width:44, height:44, borderRadius:10, background:'rgba(255,204,0,0.2)', display:'flex', alignItems:'center', justifyContent:'center', fontSize:'1.5rem', flexShrink:0 }}>📲</div>
+                      <div style={{ flex:1 }}>
+                        <div style={{ fontWeight:700, color:'#e2e8f0', fontSize:'0.9rem', marginBottom:'0.2rem' }}>MTN MoMo Pay (Recommended)</div>
+                        <div style={{ fontFamily:'monospace', color:'#fcd34d', fontSize:'0.85rem', fontWeight:600, letterSpacing:'0.05em' }}>*182*8*1*496836#</div>
+                        <div style={{ fontSize:'0.72rem', color:'var(--text-muted)', marginTop:'0.2rem' }}>Direct merchant payment · No recipient number needed</div>
+                      </div>
+                      <div style={{ background:'#f59e0b', color:'#000', borderRadius:8, padding:'0.375rem 0.75rem', fontWeight:700, fontSize:'0.78rem', flexShrink:0 }}>
+                        DIAL NOW
+                      </div>
+                    </div>
+                  </a>
+
+                  {/* Option 2 — MTN MoMo Send Money */}
+                  <a
+                    href={`tel:*182*1*1*0784214441%23`}
+                    style={{ display:'block', textDecoration:'none' }}
+                    onClick={() => toast.success('Opening MTN MoMo Send Money on your phone…')}
+                  >
+                    <div style={{ background:'rgba(59,130,246,0.06)', border:'1px solid rgba(59,130,246,0.3)', borderRadius:'12px', padding:'1rem 1.25rem', display:'flex', alignItems:'center', gap:'1rem', cursor:'pointer', transition:'all 0.2s' }}
+                      onMouseEnter={e => { e.currentTarget.style.background='rgba(59,130,246,0.12)'; e.currentTarget.style.transform='translateY(-1px)'; }}
+                      onMouseLeave={e => { e.currentTarget.style.background='rgba(59,130,246,0.06)'; e.currentTarget.style.transform='none'; }}
+                    >
+                      <div style={{ width:44, height:44, borderRadius:10, background:'rgba(59,130,246,0.15)', display:'flex', alignItems:'center', justifyContent:'center', fontSize:'1.5rem', flexShrink:0 }}>📱</div>
+                      <div style={{ flex:1 }}>
+                        <div style={{ fontWeight:700, color:'#e2e8f0', fontSize:'0.9rem', marginBottom:'0.2rem' }}>MTN MoMo Send Money</div>
+                        <div style={{ fontFamily:'monospace', color:'#93c5fd', fontSize:'0.85rem', fontWeight:600, letterSpacing:'0.05em' }}>*182*1*1*0784214441#</div>
+                        <div style={{ fontSize:'0.72rem', color:'var(--text-muted)', marginTop:'0.2rem' }}>Send directly to number {RECEIVING_NUMBER}</div>
+                      </div>
+                      <div style={{ background:'#3b82f6', color:'#fff', borderRadius:8, padding:'0.375rem 0.75rem', fontWeight:700, fontSize:'0.78rem', flexShrink:0 }}>
+                        DIAL
+                      </div>
+                    </div>
+                  </a>
+                </div>
+
+                {/* Manual instructions fallback */}
+                <div style={{ background:'var(--bg-dark)', borderRadius:'10px', padding:'1rem', marginBottom:'1.25rem', border:'1px solid var(--border)' }}>
+                  <div style={{ fontWeight:600, fontSize:'0.8rem', marginBottom:'0.625rem', color:'var(--text-secondary)' }}>
+                    📋 Or dial manually on your phone:
+                  </div>
+                  <div style={{ display:'flex', flexDirection:'column', gap:'0.625rem' }}>
+                    {[
+                      { code:'*182*8*1*496836#',        label:'MoMo Pay (merchant)', color:'#fcd34d' },
+                      { code:'*182*1*1*0784214441#',    label:'Send Money to number',color:'#93c5fd' },
+                    ].map(item => (
+                      <div key={item.code} style={{ display:'flex', alignItems:'center', justifyContent:'space-between', gap:'0.5rem' }}>
+                        <div>
+                          <span style={{ fontFamily:'monospace', fontWeight:700, color:item.color, fontSize:'0.9rem' }}>{item.code}</span>
+                          <span style={{ fontSize:'0.72rem', color:'var(--text-muted)', marginLeft:'0.5rem' }}>{item.label}</span>
+                        </div>
+                        <button onClick={() => { navigator.clipboard.writeText(item.code); toast.success('Copied!'); }}
+                          style={{ background:'var(--border)', border:'none', borderRadius:5, padding:'0.25rem 0.5rem', color:'var(--text-secondary)', cursor:'pointer', fontSize:'0.7rem', flexShrink:0 }}>
+                          <FiCopy size={11}/>
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                  <div style={{ fontSize:'0.72rem', color:'var(--text-muted)', marginTop:'0.75rem', lineHeight:1.6 }}>
+                    After dialing, enter amount <strong style={{ color:'var(--primary)' }}>{symbol} {fmt(parseFloat(form.local_amount))}</strong> and confirm with your PIN.
                   </div>
                 </div>
 
-                {/* How to send */}
-                <div style={{ background:'var(--bg-dark)', borderRadius:'10px', padding:'1rem', marginBottom:'1.25rem' }}>
-                  <div style={{ fontWeight:600, fontSize:'0.875rem', marginBottom:'0.75rem' }}>📱 How to send via {provider}:</div>
-                  <ol style={{ paddingLeft:'1.25rem', fontSize:'0.85rem', color:'var(--text-muted)', lineHeight:2, margin:0 }}>
-                    <li>Open your <strong style={{ color:'var(--text-primary)' }}>{provider}</strong> app or dial USSD</li>
-                    <li>Select <strong style={{ color:'var(--text-primary)' }}>Send Money / Transfer</strong></li>
-                    <li>Enter number: <strong style={{ color:'var(--primary)', fontFamily:'monospace' }}>{RECEIVING_NUMBER}</strong></li>
-                    <li>Enter amount: <strong style={{ color:'var(--primary)' }}>{symbol} {fmt(parseFloat(form.local_amount))}</strong></li>
-                    <li>Confirm with your PIN</li>
-                  </ol>
-                </div>
-
-                <div className="alert alert-warning" style={{ marginBottom:'1.25rem', fontSize:'0.85rem' }}>
-                  ⚠️ Make sure you send the exact amount before clicking "I've Sent the Money"
+                <div className="alert alert-warning" style={{ marginBottom:'1.25rem', fontSize:'0.82rem' }}>
+                  ⚠️ Send the exact amount shown above. After payment is complete, click the button below.
                 </div>
 
                 <div style={{ display:'flex', gap:'0.75rem' }}>
                   <button onClick={() => setStep(1)} className="btn btn-secondary" style={{ flex:1 }}>← Back</button>
-                  <button onClick={() => setStep(3)} className="btn btn-primary" style={{ flex:2 }}>
+                  <button onClick={() => setStep(3)} className="btn btn-primary" style={{ flex:2, fontSize:'0.95rem' }}>
                     ✅ I've Sent the Money →
                   </button>
                 </div>
