@@ -281,7 +281,12 @@ export default function BettingPage() {
   const [debouncedSearch, setDebouncedSearch] = useState('');
   const [selectedSport, setSelectedSport] = useState('Football');
   const [selectedLeague, setSelectedLeague] = useState('All');
-  const [statusTab, setStatusTab] = useState('upcoming');
+  const [statusTab, setStatusTab] = useState(() => {
+    // Check if we were navigated here with a specific tab preference
+    const saved = sessionStorage.getItem('betting_tab');
+    if (saved) { sessionStorage.removeItem('betting_tab'); return saved; }
+    return 'upcoming';
+  });
   const [market, setMarket] = useState('1x2');
   const [wallet, setWallet] = useState(null);
   const [slip, setSlip] = useState({ legs: [], stake: '' });

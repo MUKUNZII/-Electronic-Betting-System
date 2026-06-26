@@ -250,6 +250,12 @@ tr:hover td { background: rgba(255,255,255,0.02); }
 
 @keyframes spin { to { transform: rotate(360deg); } }
 
+@keyframes livePulse {
+  0%   { box-shadow: 0 0 0 0   rgba(239,68,68,0.5); }
+  70%  { box-shadow: 0 0 0 10px rgba(239,68,68,0);   }
+  100% { box-shadow: 0 0 0 0   rgba(239,68,68,0);    }
+}
+
 .empty-state {
   text-align: center;
   padding: 3rem;

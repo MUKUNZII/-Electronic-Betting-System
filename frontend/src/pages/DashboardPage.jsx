@@ -99,36 +99,99 @@ export default function DashboardPage() {
 
         {/* Stats */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem', marginBottom: '2rem' }}>
-          <div className="stat-card">
-            <div className="stat-icon" style={{ background: 'rgba(245,158,11,0.15)' }}>💰</div>
-            <div>
-              <div className="stat-value">RF {Math.round(parseFloat(wallet?.balance || 0)).toLocaleString()}</div>
-              <div className="stat-label">Wallet Balance (RWF)</div>
-            </div>
-          </div>
-          <div className="stat-card">
-            <div className="stat-icon" style={{ background: 'rgba(59,130,246,0.15)' }}>📥</div>
-            <div>
-              <div className="stat-value">RF {Math.round(parseFloat(wallet?.total_deposited || 0)).toLocaleString()}</div>
-              <div className="stat-label">Total Deposited</div>
-            </div>
-          </div>
-          <div className="stat-card">
-            <div className="stat-icon" style={{ background: 'rgba(34,197,94,0.15)' }}>🏆</div>
-            <div>
-              <div className="stat-value">RF {Math.round(parseFloat(wallet?.total_winnings || 0)).toLocaleString()}</div>
-              <div className="stat-label">Total Winnings</div>
-            </div>
-          </div>
-          <div className="stat-card">
-            <div className="stat-icon" style={{ background: 'rgba(239,68,68,0.15)', fontSize: '1.25rem' }}>🔴</div>
-            <div>
-              <div className="stat-value" style={{ color: eventStats?.live > 0 ? 'var(--danger)' : 'var(--text-primary)' }}>
-                {eventStats?.live || 0} Live
+          {/* Wallet balance → go deposit */}
+          <Link to="/deposit" style={{ textDecoration: 'none' }}>
+            <div className="stat-card" style={{ cursor:'pointer', transition:'all 0.2s' }}
+              onMouseEnter={e => { e.currentTarget.style.transform='translateY(-2px)'; e.currentTarget.style.borderColor='rgba(245,158,11,0.4)'; }}
+              onMouseLeave={e => { e.currentTarget.style.transform='none'; e.currentTarget.style.borderColor='var(--border)'; }}>
+              <div className="stat-icon" style={{ background: 'rgba(245,158,11,0.15)' }}>💰</div>
+              <div>
+                <div className="stat-value">RF {Math.round(parseFloat(wallet?.balance || 0)).toLocaleString()}</div>
+                <div className="stat-label">Wallet Balance (RWF)</div>
+                <div style={{ fontSize:'0.72rem', color:'var(--primary)', marginTop:'0.25rem', fontWeight:600 }}>+ Deposit →</div>
               </div>
-              <div className="stat-label">{eventStats?.upcoming || 0} upcoming events</div>
             </div>
-          </div>
+          </Link>
+          {/* Total deposited → deposit history */}
+          <Link to="/deposit" style={{ textDecoration: 'none' }}>
+            <div className="stat-card" style={{ cursor:'pointer', transition:'all 0.2s' }}
+              onMouseEnter={e => { e.currentTarget.style.transform='translateY(-2px)'; e.currentTarget.style.borderColor='rgba(59,130,246,0.4)'; }}
+              onMouseLeave={e => { e.currentTarget.style.transform='none'; e.currentTarget.style.borderColor='var(--border)'; }}>
+              <div className="stat-icon" style={{ background: 'rgba(59,130,246,0.15)' }}>📥</div>
+              <div>
+                <div className="stat-value">RF {Math.round(parseFloat(wallet?.total_deposited || 0)).toLocaleString()}</div>
+                <div className="stat-label">Total Deposited</div>
+                <div style={{ fontSize:'0.72rem', color:'#3b82f6', marginTop:'0.25rem', fontWeight:600 }}>View history →</div>
+              </div>
+            </div>
+          </Link>
+          {/* Total winnings → bet history */}
+          <Link to="/bet-history" style={{ textDecoration: 'none' }}>
+            <div className="stat-card" style={{ cursor:'pointer', transition:'all 0.2s' }}
+              onMouseEnter={e => { e.currentTarget.style.transform='translateY(-2px)'; e.currentTarget.style.borderColor='rgba(34,197,94,0.4)'; }}
+              onMouseLeave={e => { e.currentTarget.style.transform='none'; e.currentTarget.style.borderColor='var(--border)'; }}>
+              <div className="stat-icon" style={{ background: 'rgba(34,197,94,0.15)' }}>🏆</div>
+              <div>
+                <div className="stat-value">RF {Math.round(parseFloat(wallet?.total_winnings || 0)).toLocaleString()}</div>
+                <div className="stat-label">Total Winnings</div>
+                <div style={{ fontSize:'0.72rem', color:'var(--success)', marginTop:'0.25rem', fontWeight:600 }}>View bets →</div>
+              </div>
+            </div>
+          </Link>
+          <Link
+            to="/betting"
+            style={{ textDecoration: 'none' }}
+            onClick={() => {
+              // Store the filter preference so BettingPage can pick it up
+              sessionStorage.setItem('betting_tab', 'live');
+            }}
+          >
+            <div
+              className="stat-card"
+              style={{
+                cursor: 'pointer',
+                transition: 'all 0.2s',
+                border: '1px solid var(--border)',
+                borderRadius: 'var(--radius)',
+              }}
+              onMouseEnter={e => {
+                e.currentTarget.style.borderColor = 'rgba(239,68,68,0.5)';
+                e.currentTarget.style.boxShadow = '0 4px 24px rgba(239,68,68,0.15)';
+                e.currentTarget.style.transform = 'translateY(-2px)';
+              }}
+              onMouseLeave={e => {
+                e.currentTarget.style.borderColor = 'var(--border)';
+                e.currentTarget.style.boxShadow = 'var(--shadow)';
+                e.currentTarget.style.transform = 'none';
+              }}
+            >
+              {/* Pulsing live dot */}
+              <div style={{
+                width: 48, height: 48, borderRadius: 12,
+                background: 'rgba(239,68,68,0.15)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                position: 'relative', flexShrink: 0,
+              }}>
+                <div style={{
+                  width: 16, height: 16, borderRadius: '50%',
+                  background: '#ef4444',
+                  boxShadow: '0 0 0 0 rgba(239,68,68,0.4)',
+                  animation: eventStats?.live > 0 ? 'livePulse 1.5s infinite' : 'none',
+                }} />
+              </div>
+              <div>
+                <div className="stat-value" style={{ color: eventStats?.live > 0 ? '#ef4444' : 'var(--text-primary)' }}>
+                  {eventStats?.live || 0} Live
+                </div>
+                <div className="stat-label">
+                  {eventStats?.upcoming || 0} upcoming events
+                </div>
+                <div style={{ fontSize: '0.72rem', color: 'var(--primary)', marginTop: '0.25rem', fontWeight: 600 }}>
+                  View all →
+                </div>
+              </div>
+            </div>
+          </Link>
         </div>
 
         {/* Bet stats row */}
