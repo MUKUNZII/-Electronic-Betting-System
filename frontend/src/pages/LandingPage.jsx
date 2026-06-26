@@ -7,15 +7,54 @@ export default function LandingPage() {
   const { theme, toggleTheme } = useTheme();
 
   const features = [
-    { icon: '⚽', title: 'Live Sports Betting', desc: 'Bet on Football, Basketball, Tennis, Cricket and more with real-time odds.' },
-    { icon: '💰', title: 'Instant Deposits', desc: 'Fund your wallet instantly via bank transfer, crypto, or mobile money.' },
-    { icon: '🏆', title: 'Big Winnings', desc: 'Competitive odds and high potential winnings on every event.' },
-    { icon: '🔒', title: 'Secure & Safe', desc: 'Bank-grade security with JWT authentication and encrypted transactions.' },
-    { icon: '📱', title: 'Mobile Friendly', desc: 'Fully responsive design — bet from any device, anywhere.' },
-    { icon: '🎁', title: 'Bonuses & Promos', desc: 'Referral bonuses, promo codes, and exclusive offers for members.' },
+    {
+      icon: '⚽', title: 'Live Sports Betting',
+      desc: 'Bet on Football, Basketball, Tennis, Cricket and more with real-time odds.',
+      link: '/betting',
+      linkLabel: 'Bet Now →',
+    },
+    {
+      icon: '💰', title: 'Instant Deposits',
+      desc: 'Fund your wallet instantly via mobile money — MTN MoMo, Airtel Money and more.',
+      link: '/deposit',
+      linkLabel: 'Deposit →',
+    },
+    {
+      icon: '🏆', title: 'Big Winnings',
+      desc: 'Competitive odds and high potential winnings on every event. Accumulators welcome.',
+      link: '/register',
+      linkLabel: 'Start Winning →',
+    },
+    {
+      icon: '🔒', title: 'Secure & Safe',
+      desc: 'Bank-grade security with JWT authentication and encrypted transactions.',
+      link: '/register',
+      linkLabel: 'Create Account →',
+    },
+    {
+      icon: '📱', title: 'Mobile Friendly',
+      desc: 'Fully responsive design — bet from any device, anywhere, anytime.',
+      link: '/betting',
+      linkLabel: 'Open Betting →',
+    },
+    {
+      icon: '🎁', title: 'Bonuses & Promos',
+      desc: 'Referral bonuses, promo codes, and exclusive offers for members.',
+      link: '/register',
+      linkLabel: 'Claim Bonus →',
+    },
   ];
 
-  const sports = ['⚽ Football', '🏀 Basketball', '🎾 Tennis', '🏏 Cricket', '🥊 Boxing', '🏒 Hockey', '🏉 Rugby', '⛳ Golf'];
+  const sports = [
+    { label: '⚽ Football',    cat: 'Football' },
+    { label: '🏀 Basketball',  cat: 'Basketball' },
+    { label: '🎾 Tennis',      cat: 'Tennis' },
+    { label: '🏏 Cricket',     cat: 'Cricket' },
+    { label: '🥊 Boxing',      cat: 'Boxing' },
+    { label: '🏒 Hockey',      cat: 'Hockey' },
+    { label: '🏉 Rugby',       cat: 'Rugby' },
+    { label: '⛳ Golf',        cat: 'Golf' },
+  ];
 
   return (
     <div style={{ minHeight: '100vh', background: 'var(--bg-dark)' }}>
@@ -90,13 +129,29 @@ export default function LandingPage() {
         <div className="container">
           <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', justifyContent: 'center' }}>
             {sports.map(sport => (
-              <span key={sport} style={{
-                background: 'var(--bg-dark)', border: '1px solid var(--border)',
-                borderRadius: '999px', padding: '0.5rem 1.25rem',
-                fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-secondary)',
-              }}>
-                {sport}
-              </span>
+              <Link
+                key={sport.cat}
+                to={`/betting`}
+                style={{
+                  background: 'var(--bg-dark)', border: '1px solid var(--border)',
+                  borderRadius: '999px', padding: '0.5rem 1.25rem',
+                  fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-secondary)',
+                  textDecoration: 'none', transition: 'all 0.2s',
+                  display: 'inline-block',
+                }}
+                onMouseEnter={e => {
+                  e.currentTarget.style.borderColor = 'var(--primary)';
+                  e.currentTarget.style.color = 'var(--primary)';
+                  e.currentTarget.style.background = 'rgba(245,158,11,0.08)';
+                }}
+                onMouseLeave={e => {
+                  e.currentTarget.style.borderColor = 'var(--border)';
+                  e.currentTarget.style.color = 'var(--text-secondary)';
+                  e.currentTarget.style.background = 'var(--bg-dark)';
+                }}
+              >
+                {sport.label}
+              </Link>
             ))}
           </div>
         </div>
@@ -115,14 +170,55 @@ export default function LandingPage() {
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.5rem' }}>
             {features.map(f => (
-              <div key={f.title} className="card" style={{ textAlign: 'center', transition: 'transform 0.2s, box-shadow 0.2s' }}
-                onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-4px)'; e.currentTarget.style.boxShadow = '0 8px 32px rgba(245,158,11,0.15)'; }}
-                onMouseLeave={e => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = 'var(--shadow)'; }}
+              <Link
+                key={f.title}
+                to={f.link}
+                style={{ textDecoration: 'none' }}
               >
-                <div style={{ fontSize: '2.5rem', marginBottom: '1rem' }}>{f.icon}</div>
-                <h3 style={{ fontWeight: 700, marginBottom: '0.5rem' }}>{f.title}</h3>
-                <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem', lineHeight: 1.6 }}>{f.desc}</p>
-              </div>
+                <div
+                  className="card"
+                  style={{
+                    textAlign: 'center',
+                    transition: 'transform 0.2s, box-shadow 0.2s, border-color 0.2s',
+                    cursor: 'pointer',
+                    height: '100%',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                  }}
+                  onMouseEnter={e => {
+                    e.currentTarget.style.transform = 'translateY(-6px)';
+                    e.currentTarget.style.boxShadow = '0 12px 40px rgba(245,158,11,0.2)';
+                    e.currentTarget.style.borderColor = 'rgba(245,158,11,0.4)';
+                  }}
+                  onMouseLeave={e => {
+                    e.currentTarget.style.transform = 'none';
+                    e.currentTarget.style.boxShadow = 'var(--shadow)';
+                    e.currentTarget.style.borderColor = 'var(--border)';
+                  }}
+                >
+                  <div style={{ fontSize: '2.5rem', marginBottom: '1rem' }}>{f.icon}</div>
+                  <h3 style={{ fontWeight: 700, marginBottom: '0.5rem', color: 'var(--text-primary)' }}>{f.title}</h3>
+                  <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem', lineHeight: 1.6, flex: 1 }}>{f.desc}</p>
+                  {/* Link label */}
+                  <div style={{
+                    marginTop: '1.25rem',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '0.375rem',
+                    color: 'var(--primary)',
+                    fontWeight: 600,
+                    fontSize: '0.85rem',
+                    background: 'rgba(245,158,11,0.08)',
+                    border: '1px solid rgba(245,158,11,0.25)',
+                    borderRadius: '999px',
+                    padding: '0.375rem 1rem',
+                    transition: 'background 0.2s',
+                  }}>
+                    {f.linkLabel}
+                  </div>
+                </div>
+              </Link>
             ))}
           </div>
         </div>
@@ -136,17 +232,21 @@ export default function LandingPage() {
           </h2>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '2rem', textAlign: 'center' }}>
             {[
-              { step: '01', icon: '📝', title: 'Create Account', desc: 'Register in seconds with your email and basic info' },
-              { step: '02', icon: '💳', title: 'Deposit Funds', desc: 'Add money to your wallet using your preferred method' },
-              { step: '03', icon: '🎯', title: 'Place Your Bet', desc: 'Browse events and place bets with competitive odds' },
-              { step: '04', icon: '🏆', title: 'Win & Withdraw', desc: 'Collect your winnings and withdraw to your account' },
+              { step: '01', icon: '📝', title: 'Create Account', desc: 'Register in seconds with your email and basic info', link: '/register' },
+              { step: '02', icon: '💳', title: 'Deposit Funds', desc: 'Add money to your wallet using mobile money', link: '/deposit' },
+              { step: '03', icon: '🎯', title: 'Place Your Bet', desc: 'Browse events and place bets with competitive odds', link: '/betting' },
+              { step: '04', icon: '🏆', title: 'Win & Withdraw', desc: 'Collect your winnings and withdraw to your account', link: '/withdraw' },
             ].map(item => (
-              <div key={item.step}>
+              <Link key={item.step} to={item.link} style={{ textDecoration: 'none', display: 'block' }}
+                onMouseEnter={e => { e.currentTarget.querySelector('.step-icon').style.transform = 'scale(1.15)'; }}
+                onMouseLeave={e => { e.currentTarget.querySelector('.step-icon').style.transform = 'none'; }}
+              >
                 <div style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--primary)', letterSpacing: '0.1em', marginBottom: '0.75rem' }}>STEP {item.step}</div>
-                <div style={{ fontSize: '2.5rem', marginBottom: '0.75rem' }}>{item.icon}</div>
-                <h3 style={{ fontWeight: 700, marginBottom: '0.5rem' }}>{item.title}</h3>
+                <div className="step-icon" style={{ fontSize: '2.5rem', marginBottom: '0.75rem', transition: 'transform 0.2s', display: 'inline-block' }}>{item.icon}</div>
+                <h3 style={{ fontWeight: 700, marginBottom: '0.5rem', color: 'var(--text-primary)' }}>{item.title}</h3>
                 <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem' }}>{item.desc}</p>
-              </div>
+                <div style={{ marginTop: '0.875rem', fontSize: '0.8rem', color: 'var(--primary)', fontWeight: 600 }}>Click to start →</div>
+              </Link>
             ))}
           </div>
         </div>
